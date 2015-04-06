@@ -13,14 +13,14 @@ class P2PConnection:
         
         self.sd=self.s.makefile('rw',0)
         
-    def __makeMessage(self,messageType,messageData):
+    def makeMessage(self,messageType,messageData):
         messageLength=len(messageData)
-        message=struct.pack("!4sL%ds" % messageLength, messageType, messageLength, messageData)
+        message=struct.pack("!L4s%ds" % messageLength, messageType, messageLength, messageData)
         return message
     
     def sendData(self,messageType,messageData):
         try:
-            message=self.__makeMessage(messageType, messageData)
+            message=self.makeMessage(messageType, messageData)
             self.sd.write(message)
             self.sd.flush()
         except KeyboardInterrupt:
@@ -32,7 +32,8 @@ class P2PConnection:
     def receiveData(self):
         try:
             messageType=self.sd.read(4)
-            if not messageType:return (None,None)
+            if not messageType:
+                return (None,None)
             lengthString=self.sd.read(4)
             messageLength = int(struct.unpack("!L", lengthString)[0])
             message=""

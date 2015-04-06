@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import threading
 import socket
-from p2pconnection import P2PConnection
+from p2p.framework import P2PConnection
 class P2PPeer:
     
     def __init__(self,maxKnownPeers,listenPort,hostId=None,hostname=None):
@@ -11,7 +11,7 @@ class P2PPeer:
         if hostname:
             self.hostName=hostname
         else:
-            self.__initHostName()
+            self.initHostName()
         
         if hostId: 
             self.hostId=hostId
@@ -23,13 +23,13 @@ class P2PPeer:
         self.breakLoop=False
         self.handlers={}
     
-    def __initHostName(self):
+    def initHostName(self):
         s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         s.connect(("www.google.com",80))
         self.hostName=s.getsockname()[0]
         s.close();
     
-    def __handlePeer(self,clientSocket):
+    def handlePeer(self,clientSocket):
         hostName,port=clientSocket.getpeername()
         p2pConnection=P2PConnection(None,hostName,port,clientSocket)
         
@@ -130,7 +130,7 @@ class P2PPeer:
             while not self.breakLoop:
                 clientSocket,clientAdress=s.accept()
                 clientSocket.settimeout(None)
-                peerThread=threading.Thread(target=self.__handlePeer,args=[clientSocket])
+                peerThread=threading.Thread(target=self.handlePeer,args=[clientSocket])
                 peerThread.start()
         except:
             print('Error')
