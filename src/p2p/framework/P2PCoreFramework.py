@@ -1,5 +1,6 @@
 import socket
 import struct
+import traceback
 class P2PCoreFramework:
     def __init__(self,peerId,peerHostName,peerPort,clientSocket=None):
         self.peerId=peerId
@@ -8,7 +9,8 @@ class P2PCoreFramework:
             self.clientSocket.connect((peerHostName,int(peerPort)))
         else:
             self.clientSocket=clientSocket
-        self.socketDescriptor=self.clientSocket.makefile('rw',0)
+        self.clientSocket.settimeout(10)
+        self.socketDescriptor=self.clientSocket.makefile('rw',-1)
 
     def receiveData(self):
         try:
@@ -27,18 +29,22 @@ class P2PCoreFramework:
                 return(None,None)
         except KeyboardInterrupt:
             raise
-        except:
+        except socket.timeout:
+            print('Could not connect to the peer. Connection timed out')
             return (None,None)
+        except:
+            traceback.print_exc()
         return (messageType,peerMessage)
             
     def sendData(self,messageType,messageData):
         try:
             message=self.packMessageForSending(messageType, messageData)
-            self.socketDescriptor.write(message)
+            self.socketDescriptor.write(str(message))
             self.socketDescriptor.flush()
         except KeyboardInterrupt:
             raise
         except:
+            traceback.print_exc()
             return False
         return True
     

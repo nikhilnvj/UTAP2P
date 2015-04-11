@@ -5,12 +5,12 @@ import traceback
 from p2p.framework.P2PCoreFramework import P2PCoreFramework
 class P2PPeer:
     
-    def __init__(self,maxKnownPeers,listenPort,hostId=None,hostname=None):
+    def __init__(self,maxKnownPeers,listenPort,hostId=None,hostName=None):
         
         self.maxKnownPeers= int(maxKnownPeers)
         self.listenPort=int(listenPort)
-        if hostname:
-            self.hostName=hostname
+        if hostName:
+            self.hostName=hostName
         else:
             self.initHostName()
         
@@ -30,7 +30,7 @@ class P2PPeer:
         s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
         s.bind(('',self.listenPort))
         s.listen(self.maxServerConnections)
-        s.settimeout(2)
+        #s.settimeout(2)
         try:
             while self.listen:
                 print('Listening for incoming connections...')

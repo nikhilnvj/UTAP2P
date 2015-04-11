@@ -1,19 +1,19 @@
 import threading
 from p2p.framework.P2PPeer import *
 
-NAMEPEER="NAME"
-SHOWPEERS="DISP"
-ADDPEER="ADDP"
-SEARCH="QUER"
-RESPONSE="RESP"
-GETFILE="GETF"
-LEAVE="QUIT"
-REPLY="REPL"
-ERROR="ERRO"
+NAMEPEER=bytes("NAME","UTF8")
+SHOWPEERS=bytes("DISP","UTF8")
+ADDPEER=bytes("ADDP","UTF8")
+SEARCH=bytes("QUER","UTF8")
+RESPONSE=bytes("RESP","UTF8")
+GETFILE=bytes("GETF","UTF8")
+LEAVE=bytes("QUIT","UTF8")
+REPLY=bytes("REPL","UTF8")
+ERROR=bytes("ERRO","UTF8")
 
 class P2PMessageHandler(P2PPeer):
-    def __init__(self,maxKnownPeers,listenPort):
-        P2PPeer.__init__(self, maxKnownPeers,listenPort)
+    def __init__(self,maxKnownPeers,listenPort,hostName):
+        P2PPeer.__init__(self, maxKnownPeers,listenPort,hostName=hostName)
         self.files={}
         self.addRouter(self.__router)
         print('Initializing handlers.')
@@ -128,7 +128,7 @@ class P2PMessageHandler(P2PPeer):
     def buildPeerList(self,hostName,port,ttl=1):
         hostId=None
         try:
-            _,hostId=self.connectAndSend(hostName,port,NAMEPEER,'',peerId=hostId)[0]
+            _,hostId=self.connectAndSend(hostName,port,NAMEPEER,bytes("","UTF8"),peerId=hostId)[0]
                 
             response=self.connectAndSend(hostName,port,ADDPEER,'%s %s %d' %(self.hostId,self.hostName,self.listenPort))[0]
             

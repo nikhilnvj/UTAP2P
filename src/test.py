@@ -8,7 +8,7 @@ import struct
 
 if __name__ == '__main__':
     s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    s.connect(('www.google.co.se',80))
+    s.connect(('www.google.com',80))
     print('PeerName:' + str(s.getpeername()))
     print('SockName:' +str(s.getsockname()))
     messageLength=10
@@ -16,5 +16,5 @@ if __name__ == '__main__':
     messageData=bytes("nikhilnikh","utf8")
     x=struct.pack("!4sL%ds" % messageLength, messageType, messageLength, messageData)
     print (x)
-    print(int(struct.unpack("!4sL%ds"%messageLength, x)[1]))
+    print(struct.unpack("!4sL%ds"%messageLength, x)[2])
      
