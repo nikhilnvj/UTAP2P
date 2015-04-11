@@ -33,7 +33,7 @@ class P2PPeer:
         #s.settimeout(2)
         try:
             while self.listen:
-                print('Listening for incoming connections...')
+                print('Server Started. Listening for incoming connections...')
                 clientSocket,clientAdress=s.accept()
                 clientSocket.settimeout(None)
                 handlePeerThread=threading.Thread(target=self.handlePeer,args=[clientSocket])
@@ -99,8 +99,9 @@ class P2PPeer:
         messageReply=[]
         try:
             p2pPeer=P2PCoreFramework(peerId, hostName, port)
+            print('Sending data to the peer.')
             p2pPeer.sendData(messageType,messageData)
-            
+            print('Awaiting response from the peer')
             if waitReply:
                 oneReply=p2pPeer.receiveData()
             while (oneReply != (None,None)):

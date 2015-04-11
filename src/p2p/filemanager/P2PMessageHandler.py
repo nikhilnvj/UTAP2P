@@ -128,6 +128,7 @@ class P2PMessageHandler(P2PPeer):
     def buildPeerList(self,hostName,port,ttl=1):
         hostId=None
         try:
+            print('Fetching list of peers from the initial peer: %s' %hostName)
             _,hostId=self.connectAndSend(hostName,port,NAMEPEER,bytes("","UTF8"),peerId=hostId)[0]
                 
             response=self.connectAndSend(hostName,port,ADDPEER,'%s %s %d' %(self.hostId,self.hostName,self.listenPort))[0]
